@@ -1,40 +1,40 @@
 #!/bin/bash
 
 ##################################################
-#версия 3.2 от 11 августа 2017 года
+#version 3.2 from 11 august 2017 year
 #http://help.ubuntu.ru/wiki/canon_capt
 #http://forum.ubuntu.ru/index.php?topic=189049.0
 ##################################################
 
-#проверка на суперпользователя
+#check super user
 [ $USER != 'root' ] && exec sudo "$0"
 
-#пользователь под которым мы вошли в ситему
+#user which we used to log in to system
 LOGIN_USER=$(logname)
 [ -z "$LOGIN_USER" ] && LOGIN_USER=$(who | head -1 | awk '{print $1}')
 
-#подгружаем файл содержащий путь до рабочего стола
+#desktop folder path
 if [ -f ~/.config/user-dirs.dirs ]; then 
 	source ~/.config/user-dirs.dirs
 else
-	XDG_DESKTOP_DIR="$HOME/Рабочий стол"
+	XDG_DESKTOP_DIR="$HOME/Desktop"
 fi
 
-#версия драйвера
+#driver version
 DRIVER_VERSION='2.71-1'
 DRIVER_VERSION_COMMON='3.21-1'
 
-#ссылки на пакеты драйвера
-declare -A URL_DRIVER=([amd64_common]='https://drive.google.com/uc?export=download&confirm=no_antivirus&id=0Byemcyi98JRjcXE1YWE0VjVDalE' \
-[amd64_capt]='https://drive.google.com/uc?export=download&confirm=no_antivirus&id=0Byemcyi98JRjaWM2QzhVWF9MRGM' \
-[i386_common]='https://drive.google.com/uc?export=download&confirm=no_antivirus&id=0Byemcyi98JRjeEs5UG9ZdTNBaXc' \
-[i386_capt]='https://drive.google.com/uc?export=download&confirm=no_antivirus&id=0Byemcyi98JRjcWRrQ2dKZ1JyTUU')
+#links to driver packages
+declare -A URL_DRIVER=([amd64_common]='https://github.com/ikr0m/canon-driver/blob/master/files/cndrvcups-common_3.21-1_amd64_0Byemcyi98JRjcXE1YWE0VjVDalE.deb' \
+[amd64_capt]='https://github.com/ikr0m/canon-driver/blob/master/files/cndrvcups-capt_2.71-1_amd64_0Byemcyi98JRjaWM2QzhVWF9MRGM.deb' \
+[i386_common]='https://github.com/ikr0m/canon-driver/blob/master/files/cndrvcups-common_3.21-1_i386_0Byemcyi98JRjeEs5UG9ZdTNBaXc.deb' \
+[i386_capt]='https://github.com/ikr0m/canon-driver/blob/master/files/cndrvcups-capt_2.71-1_i386_0Byemcyi98JRjcWRrQ2dKZ1JyTUU.deb')
 
-#ссылки на утилиту autoshutdowntool
-declare -A URL_ASDT=([amd64]='https://drive.google.com/uc?export=download&confirm=no_antivirus&id=0Byemcyi98JRjc0s2YlJVZ0xBckk' \
-[i386]='https://drive.google.com/uc?export=download&confirm=no_antivirus&id=0Byemcyi98JRjdzFlWjVnbGpBMFU')
+#links to utility autoshutdowntool
+declare -A URL_ASDT=([amd64]='https://github.com/ikr0m/canon-driver/blob/master/files/autoshutdowntool_1.00-1_amd64_deb_0Byemcyi98JRjc0s2YlJVZ0xBckk.tar.gz' \
+[i386]='https://github.com/ikr0m/canon-driver/blob/master/files/autoshutdowntool_1.00-1_i386_deb_0Byemcyi98JRjdzFlWjVnbGpBMFU.tar.gz')
 
-#соостветствие ppd файлов и моделей принтеров
+#corresponding ppd files and printer models
 declare -A LASERSHOT=([LBP-810]=1120 [LBP-1120]=1120 [LBP-1210]=1210 \
 [LBP2900]=2900 [LBP3000]=3000 [LBP3010]=3050 [LBP3018]=3050 [LBP3050]=3050 \
 [LBP3100]=3150 [LBP3108]=3150 [LBP3150]=3150 [LBP3200]=3200 [LBP3210]=3210 \
@@ -44,30 +44,30 @@ declare -A LASERSHOT=([LBP-810]=1120 [LBP-1120]=1120 [LBP-1210]=1210 \
 [LBP6310]=6310 [LBP7010C]=7018C [LBP7018C]=7018C [LBP7200C]=7200C [LBP7210C]=7210C \
 [LBP9100C]=9100C [LBP9200C]=9200C)
 
-#отсортированные имена принтеров 
+#sort printer names
 NAMESPRINTERS=$(echo "${!LASERSHOT[@]}" | tr ' ' '\n' | sort -n -k1.4)
 
-#список моделей, которые поддерживаются утилитой автоотключения
+#models list which support autoshutdown utility
 declare -A ASDT_SUPPORTED_MODELS=([LBP6020]='MTNA002001 MTNA999999' \
 [LBP6020B]='MTMA002001 MTMA999999' [LBP6200]='MTPA00001 MTPA99999' \
 [LBP6310]='MTLA002001 MTLA999999' [LBP7010C]='MTQA00001 MTQA99999' \
 [LBP7018C]='MTRA00001 MTRA99999' [LBP7210C]='MTKA002001 MTKA999999')
 
-#архитектура операционной системы
+#operating system architecture
 if [ "$(uname -m)" == 'x86_64' ]; then
   ARCH='amd64'
 else
   ARCH='i386'
 fi
 
-#определяем систему инициализации
+#detect system initialization
 if [[ $(ps -p1 | grep systemd) ]]; then
 	INIT_SYSTEM='systemd'
 else
 	INIT_SYSTEM='upstart'
 fi
 
-#делаем рабочим каталог, в котором находится этот скрипт
+#do working directory which this script located
 cd "$(dirname "$0")"
 
 function valid_ip() {
@@ -85,12 +85,12 @@ function valid_ip() {
 function check_error() {
 	if [ $2 -ne 0 ]; then
 		case $1 in
-			'WGET') echo "Ошибка при скачивании файла $3"				
+			'WGET') echo "Error while downloading file $3"
 				[ -n "$3" ] && [ -f "$3" ] && rm "$3";;
-			'PACKAGE') echo "Ошибка при установке пакета $3";;
-			*) echo 'Ошибка';;
+			'PACKAGE') echo "Error while installing packet $3";;
+			*) echo 'Error';;
 		esac
-		echo 'Нажмите любую клавишу для выхода'
+		echo 'Press any key to exit'
 		read -s -n1
 		exit 1
 	fi
@@ -100,30 +100,30 @@ function canon_unistall() {
 	if [ -f /usr/sbin/ccpdadmin ]; then
 		installed_model=$(ccpdadmin | grep LBP | awk '{print $3}')
 		if [ -n "$installed_model" ]; then
-			echo "Найден принтер $installed_model"
-			echo "Завершение captstatusui"
+			echo "Printer found $installed_model"
+			echo "Finished captstatusui"
 			killall captstatusui 2> /dev/null
-			echo 'Остановка демона ccpd'
+			echo 'Stopping daemon ccpd'
 			service ccpd stop
-			echo 'Удаление принтера из файла настройки ccpd демона'
+			echo 'Deleting printer from ccpd daemon file settings'
 			ccpdadmin -x $installed_model
-			echo 'Удаление принтера из CUPS'
+			echo 'Deleting printer from CUPS'
 			lpadmin -x $installed_model
 		fi
 	fi
-	echo 'Удаление пакетов драйвера'
+	echo 'Deleting driver packages'
 	dpkg --purge cndrvcups-capt
 	dpkg --purge cndrvcups-common
-	echo 'Удаление неиспользуемых библиотек и пакетов'
+	echo 'Deleting not used libraries and packages'
 	apt-get -y autoremove
-	echo 'Удаление настроек'
+	echo 'Deleting settings'
 	[ -f /etc/init/ccpd-start.conf ] && rm /etc/init/ccpd-start.conf
 	[ -f /etc/udev/rules.d/85-canon-capt.rules ] && rm /etc/udev/rules.d/85-canon-capt.rules
 	[ -f "${XDG_DESKTOP_DIR}/captstatusui.desktop" ] && rm "${XDG_DESKTOP_DIR}/captstatusui.desktop"
 	[ -f /usr/bin/autoshutdowntool ] && rm /usr/bin/autoshutdowntool
 	[ $INIT_SYSTEM == 'systemd' ] && update-rc.d -f ccpd remove
-	echo 'Удаление завершено'
-	echo 'Нажмите любую клавишу для выхода'
+	echo 'Finished deleting'
+	echo 'Press any key to exit'
 	read -s -n1
 	return 0
 }
