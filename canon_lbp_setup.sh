@@ -25,14 +25,14 @@ DRIVER_VERSION='2.71-1'
 DRIVER_VERSION_COMMON='3.21-1'
 
 #links to driver packages
-declare -A URL_DRIVER=([amd64_common]='https://github.com/ikr0m/canon-driver/blob/master/files/cndrvcups-common_3.21-1_amd64_0Byemcyi98JRjcXE1YWE0VjVDalE.deb' \
-[amd64_capt]='https://github.com/ikr0m/canon-driver/blob/master/files/cndrvcups-capt_2.71-1_amd64_0Byemcyi98JRjaWM2QzhVWF9MRGM.deb' \
-[i386_common]='https://github.com/ikr0m/canon-driver/blob/master/files/cndrvcups-common_3.21-1_i386_0Byemcyi98JRjeEs5UG9ZdTNBaXc.deb' \
-[i386_capt]='https://github.com/ikr0m/canon-driver/blob/master/files/cndrvcups-capt_2.71-1_i386_0Byemcyi98JRjcWRrQ2dKZ1JyTUU.deb')
+declare -A URL_DRIVER=([amd64_common]='https://github.com/ikr0m/canon-driver/raw/master/files/cndrvcups-common_3.21-1_amd64_0Byemcyi98JRjcXE1YWE0VjVDalE.deb' \
+[amd64_capt]='https://github.com/ikr0m/canon-driver/raw/master/files/cndrvcups-capt_2.71-1_amd64_0Byemcyi98JRjaWM2QzhVWF9MRGM.deb' \
+[i386_common]='https://github.com/ikr0m/canon-driver/raw/master/files/cndrvcups-common_3.21-1_i386_0Byemcyi98JRjeEs5UG9ZdTNBaXc.deb' \
+[i386_capt]='https://github.com/ikr0m/canon-driver/raw/master/files/cndrvcups-capt_2.71-1_i386_0Byemcyi98JRjcWRrQ2dKZ1JyTUU.deb')
 
 #links to utility autoshutdowntool
-declare -A URL_ASDT=([amd64]='https://github.com/ikr0m/canon-driver/blob/master/files/autoshutdowntool_1.00-1_amd64_deb_0Byemcyi98JRjc0s2YlJVZ0xBckk.tar.gz' \
-[i386]='https://github.com/ikr0m/canon-driver/blob/master/files/autoshutdowntool_1.00-1_i386_deb_0Byemcyi98JRjdzFlWjVnbGpBMFU.tar.gz')
+declare -A URL_ASDT=([amd64]='https://github.com/ikr0m/canon-driver/raw/master/files/autoshutdowntool_1.00-1_amd64_deb_0Byemcyi98JRjc0s2YlJVZ0xBckk.tar.gz' \
+[i386]='https://github.com/ikr0m/canon-driver/raw/master/files/autoshutdowntool_1.00-1_i386_deb_0Byemcyi98JRjdzFlWjVnbGpBMFU.tar.gz')
 
 #corresponding ppd files and printer models
 declare -A LASERSHOT=([LBP-810]=1120 [LBP-1120]=1120 [LBP-1210]=1210 \
